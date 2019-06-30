@@ -7,7 +7,8 @@ class MovieDetailsPage extends Component {
   };
 
   state = {
-    movieDetails: undefined
+    movieDetails: undefined,
+    fetchStatus: false
   };
 
   static _log(...message) {
@@ -16,17 +17,14 @@ class MovieDetailsPage extends Component {
 
   componentDidMount() {
     const { movieId } = this.props.match.params;
+    console.log(movieId);
     //console.log(`inside movieDetailsPage with movieId : ${movieId}`);
-    fetch(
-      "https://cine-world.herokuapp.com/api/Movie/" +
-        movieId.substring(2) +
-        "/Details"
-    )
+    fetch("https://cine-world.herokuapp.com/api/Movie/" + movieId + "/Details")
       .then(results => {
         return results.json();
       })
       .then(response => {
-        this.setState({ movieDetails: response });
+        this.setState({ movieDetails: response, fetchStatus: true });
         MovieDetailsPage._log(`returned movieDetails list is ${response}`);
       })
       .catch(function(err) {
@@ -35,12 +33,21 @@ class MovieDetailsPage extends Component {
   }
 
   render() {
-    const { movieDetails } = this.state;
-    if (!movieDetails) {
+    const item = this.state.movieDetails;
+    if (!this.state.fetchStatus) {
       return <div>Rendering movie details...</div>;
     }
-    return movieDetails.map((item, key) => (
-      <div key={key}>
+
+    if (!item.id) {
+      return (
+        <div>
+          Sorry we couldn't find details for this movie. Please refresh the
+          page.
+        </div>
+      );
+    }
+    return (
+      <div>
         <h3>{item.title}</h3>
         <p>{item.year}</p>
         <p>{item.rated}</p>
@@ -61,7 +68,7 @@ class MovieDetailsPage extends Component {
         <p>{item.poster}</p>
         <p>{item.plot}</p>
       </div>
-    ));
+    );
   }
 }
 

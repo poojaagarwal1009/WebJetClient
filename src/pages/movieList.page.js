@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
 class MovieListPage extends Component {
   state = {
@@ -59,9 +60,13 @@ class MovieListPage extends Component {
             <div>Name-> {item.title}</div>
             <div>Released in-> {item.year}</div>
             {/* <div>Genre-> {item.type}</div> */}
-            <button onClick={() => this.getMovieDetails(item.id)}>
-              Details
-            </button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.getMovieDetails(item.id)}
+            >
+              Details >>
+            </Button>
             <hr />
           </div>
         ))}
